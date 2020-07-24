@@ -1,4 +1,4 @@
-import * as accounts from './accounts';
+const accounts = require('./accounts');
 
 test('check password', async () => {
   const password = 'foo';

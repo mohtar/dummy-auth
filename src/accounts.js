@@ -1,25 +1,25 @@
-import {promisify} from 'util';
-import * as crypto from 'crypto';
-import nanoid from 'nanoid';
+const {nanoid} = require('nanoid');
+const {promisify} = require('util');
+const crypto = require('crypto');
 
 const digest = 'sha256';
 const keylen = 32;
 
-export async function authenticate(db, usernameOrEmail, password) {
+async function authenticate(db, usernameOrEmail, password) {
   const row = await db
     .db()
     .collection('users')
     .findOne({
       $or: [{username: usernameOrEmail}, {email: usernameOrEmail}],
     });
-  if (row && checkPassword(password, row.hashedPassword)) {
+  if (row && (await checkPassword(password, row.hashedPassword))) {
     return row.id;
   } else {
     return null;
   }
 }
 
-export async function register(db, username, email, password) {
+async function register(db, username, email, password) {
   const row = await db
     .db()
     .collection('users')
@@ -27,9 +27,9 @@ export async function register(db, username, email, password) {
       $or: [{username}, {email}],
     });
   if (row) {
-    return row.id;
+    return null;
   } else {
-    const id = nanoid.nanoid(10);
+    const id = nanoid(10);
     const hashedPassword = await makePassword(password);
     await db
       .db()
@@ -39,12 +39,12 @@ export async function register(db, username, email, password) {
   }
 }
 
-export async function byId(db, id) {
+async function byId(db, id) {
   const row = await db.db().collection('users').findOne({id});
   return row;
 }
 
-export async function makePassword(password) {
+async function makePassword(password) {
   const algorithm = 'pbkdf2';
   const iterations = 120000;
   const salt = await promisify(crypto.randomBytes)(16);
@@ -63,17 +63,18 @@ export async function makePassword(password) {
   ].join('$');
 }
 
-export async function checkPassword(password, encoded) {
+async function checkPassword(password, encoded) {
   const [algorithm, iterations, salt, hash] = encoded.split('$');
-  if (algorithm != 'pbkdf2') {
-    return false;
+  if (algorithm == 'pbkdf2') {
+    const hash2 = await promisify(crypto.pbkdf2)(
+      password,
+      Buffer.from(salt, 'base64'),
+      parseInt(iterations, 10),
+      keylen,
+      digest,
+    );
+    return Buffer.from(hash, 'base64').equals(hash2);
   }
-  const hash2 = await promisify(crypto.pbkdf2)(
-    password,
-    Buffer.from(salt, 'base64'),
-    parseInt(iterations, 10),
-    keylen,
-    digest,
-  );
-  return Buffer.from(hash, 'base64').equals(hash2);
 }
+
+module.exports = {authenticate, register, byId, makePassword, checkPassword};

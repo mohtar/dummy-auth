@@ -1,7 +1,7 @@
-import * as accounts from './accounts.js';
-import bodyParser from 'body-parser';
-import express from 'express';
-import jwt from 'jsonwebtoken';
+const accounts = require('./accounts');
+const bodyParser = require('body-parser');
+const express = require('express');
+const jwt = require('jsonwebtoken');
 
 const secret = 'ZfPTimQus63SMaJurRJN3NShSLhMGwOdGRMnyIWjmIhluAOcrx';
 
@@ -34,8 +34,10 @@ function getToken(req) {
   }
 }
 
-export default async function makeApp(db) {
+async function makeApp(db) {
   const app = express();
+
+  app.use('/static', express.static('static'));
 
   app.use(bodyParser.urlencoded({extended: false}));
 
@@ -52,7 +54,11 @@ export default async function makeApp(db) {
   app.post('/api/signup', async (req, res) => {
     const {username, email, password} = req.body;
     const userId = await accounts.register(db, username, email, password);
-    res.json(accessToken(userId));
+    if (userId) {
+      res.json(accessToken(userId));
+    } else {
+      res.status(400).json({error: 'user_already_registered'});
+    }
   });
 
   app.get('/api/self', async (req, res) => {
@@ -66,7 +72,13 @@ export default async function makeApp(db) {
     }
   });
 
-  app.get('/*', (req, res) => {});
+  app.get('/*', (req, res) => {
+    res.send(
+      '<!doctype html><html><body><div id="main"></div><script src="/static/js/main.js"></script></body></html>',
+    );
+  });
 
   return app;
 }
+
+module.exports = makeApp;

@@ -1,10 +1,10 @@
-import makeApp from './app.js';
-import mongodb from 'mongodb';
+const makeApp = require('./app');
+const mongodb = require('mongodb');
 
 (async () => {
-  const port = 8080;
-  const conn = await mongodb.MongoClient.connect(process.env.MONGO_URI);
-  const db = await conn.db();
+  const port = process.argv[2] || 8080;
+  const mongoUri = process.env.MONGO_URI || 'mongodb://localhost';
+  const db = await mongodb.MongoClient.connect(mongoUri);
   const app = await makeApp(db);
   app.listen(port);
 })();

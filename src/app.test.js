@@ -1,8 +1,8 @@
-import makeApp from './app';
-import mongodb from 'mongodb';
-import mongodbMemoryServer from 'mongodb-memory-server';
-import querystring from 'querystring';
-import request from 'supertest';
+const makeApp = require('./app');
+const mongodb = require('mongodb');
+const mongodbMemoryServer = require('mongodb-memory-server');
+const querystring = require('querystring');
+const request = require('supertest');
 
 let mongod = null;
 let db = null;
@@ -49,6 +49,22 @@ test('sign up', async () => {
   expect(res.body.email).toEqual(email);
 });
 
+test('sign up existing user', async () => {
+  const username = 'foo';
+  const email = 'foo@example.com';
+  const password = 'bar';
+
+  await request(app)
+    .post('/api/signup')
+    .send(querystring.stringify({username, email, password}))
+    .expect(200);
+
+  await request(app)
+    .post('/api/signup')
+    .send(querystring.stringify({username, email, password}))
+    .expect(400);
+});
+
 test('log in', async () => {
   const username = 'foo';
   const email = 'foo@example.com';
@@ -87,4 +103,8 @@ test('unsuccessful log in', async () => {
     .post('/api/login')
     .send(querystring.stringify({usernameOrEmail: 'fake', password: 'fake'}))
     .expect(400);
+});
+
+test('frontend', async () => {
+  await request(app).get('/').expect(200);
 });
