@@ -98,8 +98,12 @@ Response:
 * `username`: (String)
 * `email` (String)
 
-# Architecture
+# System architecture
 
-![ERD](https://raw.githubusercontent.com/mohtar/dummy-auth/master/docs/erd.png)
+How user information is stored:
 
-![Sequence](https://raw.githubusercontent.com/mohtar/dummy-auth/master/docs/sequence.png)
+<img src="docs/erd.png" width="251">
+
+Sequence diagram illustrating login use case:
+
+<img src="docs/sequence.png" width="421">
