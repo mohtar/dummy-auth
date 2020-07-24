@@ -1,0 +1,29 @@
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.5.9",
+    "nanoid": "^3.1.10",
+    "react": "^16.13.1"
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "devDependencies": {
+    "jest": "^26.1.0",
+    "mongodb-memory-server": "^6.6.1",
+    "supertest": "^4.0.2"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "jest": {
+    "transform": {},
+    "testEnvironment": "jest-environment-node"
+  }
+}
