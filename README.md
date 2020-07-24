@@ -97,3 +97,9 @@ Response:
 * `id` (String)
 * `username`: (String)
 * `email` (String)
+
+# Architecture
+
+![ERD](https://raw.githubusercontent.com/mohtar/dummy-auth/master/docs/erd.png)
+
+![Sequence](https://raw.githubusercontent.com/mohtar/dummy-auth/master/docs/sequence.png)
