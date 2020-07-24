@@ -55,7 +55,11 @@ export default function Login({setAccessToken}) {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </b.Form.Group>
-            <b.Button variant="primary" type="submit">
+            <b.Button
+              variant="primary"
+              type="submit"
+              disabled={!usernameOrEmail || !password}
+            >
               Log in
             </b.Button>
           </b.Form>
