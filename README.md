@@ -1,3 +1,5 @@
+A live deployment of this project can be seen at http://dummy-auth.mohtar.usw1.kubesail.org
+
 # Summary
 
 This project includes the following endpoints:
