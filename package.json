@@ -35,7 +35,9 @@
   },
   "scripts": {
     "build": "webpack",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "start": "node src/server.js",
+    "deploy": "docker build -t tarmiziaffandi/dummy-auth . && kubectl apply -f deploy"
   },
   "jest": {
     "transform": {},
