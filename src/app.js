@@ -41,6 +41,9 @@ async function makeApp(db) {
 
   app.use(bodyParser.urlencoded({extended: false}));
 
+  app.get('/api/login', (req, res) => {
+    res.set('Allow', 'POST').send(405);
+  });
   app.post('/api/login', async (req, res) => {
     const {usernameOrEmail, password} = req.body;
     const userId = await accounts.authenticate(db, usernameOrEmail, password);
@@ -51,6 +54,9 @@ async function makeApp(db) {
     }
   });
 
+  app.get('/api/signup', (req, res) => {
+    res.set('Allow', 'POST').send(405);
+  });
   app.post('/api/signup', async (req, res) => {
     const {username, email, password} = req.body;
     const userId = await accounts.register(db, username, email, password);
