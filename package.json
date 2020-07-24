@@ -20,6 +20,7 @@
     "trailingComma": "all"
   },
   "devDependencies": {
+    "@babel/core": "^7.10.5",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
@@ -33,13 +34,15 @@
     "webpack-cli": "^3.3.12"
   },
   "scripts": {
+    "build": "webpack",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "jest": {
     "transform": {},
     "testEnvironment": "jest-environment-node",
     "moduleFileExtensions": [
-      "js","mjs"
+      "js",
+      "mjs"
     ]
   }
 }
