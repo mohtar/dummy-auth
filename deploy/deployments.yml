@@ -18,7 +18,7 @@ spec:
       containers:
         - name: webapp
           image: tarmiziaffandi/dummy-auth
-          imagePullPolicy: Always
+          imagePullPolicy: Never
           args: [node, src/server.js, '80']
           env:
             - name: MONGO_URI
