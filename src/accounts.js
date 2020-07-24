@@ -1,5 +1,6 @@
 const {nanoid} = require('nanoid');
 const {promisify} = require('util');
+const assert = require('assert');
 const crypto = require('crypto');
 
 const digest = 'sha256';
@@ -65,16 +66,15 @@ async function makePassword(password) {
 
 async function checkPassword(password, encoded) {
   const [algorithm, iterations, salt, hash] = encoded.split('$');
-  if (algorithm == 'pbkdf2') {
-    const hash2 = await promisify(crypto.pbkdf2)(
-      password,
-      Buffer.from(salt, 'base64'),
-      parseInt(iterations, 10),
-      keylen,
-      digest,
-    );
-    return Buffer.from(hash, 'base64').equals(hash2);
-  }
+  assert(algorithm == 'pbkdf2');
+  const hash2 = await promisify(crypto.pbkdf2)(
+    password,
+    Buffer.from(salt, 'base64'),
+    parseInt(iterations, 10),
+    keylen,
+    digest,
+  );
+  return Buffer.from(hash, 'base64').equals(hash2);
 }
 
 module.exports = {authenticate, register, byId, makePassword, checkPassword};

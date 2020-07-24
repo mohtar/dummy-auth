@@ -103,6 +103,8 @@ test('bogus token', async () => {
     .get('/api/self')
     .set('Authorization', `Bearer BOGUS`)
     .expect(401);
+
+  await request(app).get('/api/self').set('Authorization', `BOGUS`).expect(401);
 });
 
 test('unsuccessful log in', async () => {
@@ -114,4 +116,9 @@ test('unsuccessful log in', async () => {
 
 test('frontend', async () => {
   await request(app).get('/').expect(200);
+});
+
+test('method not allowed', async () => {
+  await request(app).get('/api/login').expect(405);
+  await request(app).get('/api/signup').expect(405);
 });
