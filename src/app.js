@@ -63,12 +63,23 @@ async function makeApp(db) {
 
   app.get('/api/self', async (req, res) => {
     const token = getToken(req);
+    const unauthorized = {
+      error: 'unauthorized_client',
+      errorDescription: 'Authorization code is invalid or expired.',
+    };
     if (token) {
-      const {id} = jwt.verify(token, secret);
+      let claims;
+      try {
+        claims = jwt.verify(token, secret);
+      } catch (e) {
+        res.status(401).send(unauthorized);
+        return;
+      }
+      const {id} = claims;
       const user = await accounts.byId(db, id);
       res.status(200).json({id, username: user.username, email: user.email});
     } else {
-      res.status(401).send('');
+      res.status(401).send(unauthorized);
     }
   });
 

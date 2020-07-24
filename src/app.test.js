@@ -98,6 +98,13 @@ test('access protected page', async () => {
   await request(app).get('/api/self').expect(401);
 });
 
+test('bogus token', async () => {
+  await request(app)
+    .get('/api/self')
+    .set('Authorization', `Bearer BOGUS`)
+    .expect(401);
+});
+
 test('unsuccessful log in', async () => {
   await request(app)
     .post('/api/login')
